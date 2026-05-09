@@ -13,7 +13,7 @@
 - yacs==0.1.8
 - loguru==0.5.3
 
-## Architecture of TEM-GCN ( Motion-guided Graph)
+## Architecture of CAM-GCN ( Motion-guided Graph)
 ![Model Architecture](src/MA.png)
 # Data Preparation
 
