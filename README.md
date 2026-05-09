@@ -1,4 +1,4 @@
-# TEM-GCN
+# CAM-GCN
 
 # Prerequisites
 
