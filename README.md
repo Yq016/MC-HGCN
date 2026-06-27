@@ -1,80 +1,118 @@
-# CAM-GCN
+# MC-HGCN: Motion-Guided Channel-Wise Hypergraph Convolutional Network
 
-# Prerequisites
+[![Paper]()]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Official PyTorch implementation of **MC-HGCN** for skeleton-based action recognition.
+
+> **MC-HGCN: Motion-Guided Channel-Wise Hypergraph Convolutional Network for Skeleton-Based Action Recognition**
+
+## Overview
+
+MC-HGCN models skeleton sequences through a unified hypergraph structure that captures higher-order joint group dependencies. Unlike conventional graph convolutional networks limited to pairwise edges, hyperedges can connect arbitrary numbers of joints, explicitly encoding coordinated joint groups such as entire limbs or cross-limb pairs. The framework introduces three complementary mechanisms:
+
+- **Hypergraph Construction**: body-part and cross-limb hyperedges encode anatomical and symmetric priors.
+- **Motion-Guided Modulation**: per-joint motion intensity adaptively reweights the incidence matrix at each frame.
+- **Channel-Wise Hyperedge Learning**: each feature channel learns distinct hyperedge correlation patterns.
+
+## Architecture
+
+![MC-HGCN Architecture](assets/architecture.png)
+
+## Prerequisites
 
 - Python >= 3.6
 - PyTorch >= 1.1.0
-- PyYAML==5.4.1, tqdm==4.53.0, tensorboardX
-- Torchvision==0.2.1
-- Numpy==1.19.4
-- Scipy==1.5.4
-- thop==0.0.31.post2005241907 , fvcore==0.1.3.post20210311
-- iopath==0.1.4
-- yacs==0.1.8
-- loguru==0.5.3
+- PyYAML, tqdm, tensorboardX
+- Numpy, Scipy
+- thop, fvcore
 
-## Architecture of CAM-GCN ( Motion-guided Graph)
-![Model Architecture](src/MA.png)
-# Data Preparation
+Install dependencies:
 
-#### This project uses the NTU RGB+D skeleton datasets. Before running training or evaluation, please prepare the data as follows.
+```bash
+pip install torch>=1.1.0 pyyaml tqdm tensorboardX numpy scipy thop fvcore
+```
 
-#### Required datasets
+## Data Preparation
+
+This project uses the NTU RGB+D skeleton datasets.
+
+### Required Datasets
 
 - NTU RGB+D 60 Skeleton
 - NTU RGB+D 120 Skeleton
 
-#### How to obtain the data
+### Obtaining the Data
 
-#### NTU RGB+D 60 and 120
-
-1. Visit the official NTU RGB+D dataset page and submit a request:
-    https://rose1.ntu.edu.sg/dataset/actionRecognition
-2. After approval, download the skeleton-only archives:
-   - `nturgbd_skeletons_s001_to_s017.zip` (for NTU RGB+D 60)
-   - `nturgbd_skeletons_s018_to_s032.zip` (for NTU RGB+D 120)
-   - unzip all downloaded files into the following directory:   ./data/nturgbd_raw
-
-### Data Processing
-
-#### Directory Structure
-
-Put downloaded data into the following directory structure:
+1. Visit the [NTU RGB+D dataset page](https://rose1.ntu.edu.sg/dataset/actionRecognition) and submit a request.
+2. After approval, download the skeleton archives:
+   - `nturgbd_skeletons_s001_to_s017.zip` (NTU RGB+D 60)
+   - `nturgbd_skeletons_s018_to_s032.zip` (NTU RGB+D 120)
+3. Unzip into the following directory structure:
 
 ```
-- data/
-  - nturgbd_raw/
-    - nturgb+d_skeletons/     # from `nturgbd_skeletons_s001_to_s017.zip`
-      ...
-    - nturgb+d_skeletons120/  # from `nturgbd_skeletons_s018_to_s032.zip`
+data/
+  nturgbd_raw/
+    nturgb+d_skeletons/       # from nturgbd_skeletons_s001_to_s017.zip
+    nturgb+d_skeletons120/    # from nturgbd_skeletons_s018_to_s032.zip
 ```
 
-#### Generating Data
+### Processing
 
-- Generate NTU RGB+D 60 or NTU RGB+D 120 dataset:
+```bash
+# For NTU RGB+D 60
+cd ./data/ntu
+python get_raw_skes_data.py
+python get_raw_denoised_data.py
+python seq_transformation.py
 
-```
- cd ./data/ntu # or cd ./data/ntu120
- # Get skeleton of each performer
- python get_raw_skes_data.py
- # Remove the bad skeleton 
- python get_raw_denoised_data.py
- # Transform the skeleton to the center of the first frame
- python seq_transformation.py
-```
-
-
-
-# Training 
-
-`python main.py --config config/nturgbd120-cross-subject/default.yaml --work-dir work_dir/ntu120/csub/temgcn --device 0`
-
-to train model on NTU RGB+D 60/120 with motion modalities. 
-
-```
-python main.py --config config/nturgbd120-cross-subject/default.yaml --train_feeder_args bone=True --test_feeder_args bone=True --device 0
+# For NTU RGB+D 120
+cd ./data/ntu120
+python get_raw_skes_data.py
+python get_raw_denoised_data.py
+python seq_transformation.py
 ```
 
+## Training
 
+Train on NTU RGB+D 120 (cross-subject):
 
- 
+```bash
+python main.py --config config/nturgbd120-cross-subject/default.yaml --work-dir work_dir/ntu120/csub/mc-hgcn --device 0
+```
+
+Train on NTU RGB+D 60 (cross-subject):
+
+```bash
+python main.py --config config/nturgbd60-cross-subject/default.yaml --work-dir work_dir/ntu60/csub/mc-hgcn --device 0
+```
+
+All experiments use only 3D joint coordinates as input (no bone or motion modalities).
+
+## Results
+
+| Benchmark     | X-Sub | X-View | X-Set |
+| ------------- | ----- | ------ | ----- |
+| NTU RGB+D 60  | 93.1  | 96.7   | --    |
+| NTU RGB+D 120 | 90.3  | --     | 91.2  |
+
+## Citation
+
+If you find this work useful, please cite:
+
+```bibtex
+@article{li2025mchgcn,
+  title={MC-HGCN: Motion-Guided Channel-Wise Hypergraph Convolutional Network for Skeleton-Based Action Recognition},
+  author={Li, Yongqi and others},
+  journal={arXiv preprint},
+  year={2025}
+}
+```
+
+## License
+
+MIT License.
+
+## Acknowledgements
+
+This codebase is built upon [CTR-GCN](https://github.com/Uason-Chen/CTR-GCN) and [DHGCN](https://github.com/wei2001/DHGCN). We thank the authors for their excellent work.
