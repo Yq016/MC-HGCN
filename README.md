@@ -1,7 +1,5 @@
 # MC-HGCN: Motion-Guided Channel-Wise Hypergraph Convolutional Network
 
-[![Paper]()]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official PyTorch implementation of **MC-HGCN** for skeleton-based action recognition.
 
@@ -113,6 +111,3 @@ If you find this work useful, please cite:
 
 MIT License.
 
-## Acknowledgements
-
-This codebase is built upon [CTR-GCN](https://github.com/Uason-Chen/CTR-GCN) and [DHGCN](https://github.com/wei2001/DHGCN). We thank the authors for their excellent work.
