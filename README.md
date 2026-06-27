@@ -15,7 +15,7 @@ MC-HGCN models skeleton sequences through a unified hypergraph structure that ca
 
 ## Architecture
 
-![MC-HGCN Architecture](assets/architecture.png)
+![MC-HGCN Architecture](src/ew1_01.png)
 
 ## Prerequisites
 
